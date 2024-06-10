@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "field:project_name",
  "creation": "2013-03-07 11:55:07",
  "doctype": "DocType",
  "document_type": "Setup",
@@ -452,11 +452,11 @@
  "index_web_pages_for_search": 1,
  "links": [],
  "max_attachments": 4,
- "modified": "2023-02-14 04:54:25.819620",
+ "modified": "2024-05-17 11:01:26.254434",
  "modified_by": "Administrator",
  "module": "Projects",
  "name": "Project",
- "naming_rule": "By \"Naming Series\" field",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -497,5 +497,7 @@
  "states": [],
  "timeline_field": "customer",
  "title_field": "project_name",
- "track_seen": 1
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
 }
