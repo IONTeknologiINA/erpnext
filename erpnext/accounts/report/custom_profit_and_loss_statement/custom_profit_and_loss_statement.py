@@ -39,7 +39,7 @@ def execute(filters=None):
 
 	cogs = get_data(
 		filters.company,
-		"COGS",
+		"Cost of Good Sold",
 		"Debit",
 		"Total COGS",
 		period_list,
