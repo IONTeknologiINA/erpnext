@@ -173,7 +173,7 @@ def get_data(
     gl_entries_by_account = {}
     for root in frappe.db.sql(
         """select lft, rgt from tabAccount
-            where type=%s and ifnull(parent_account, '') = ''""",
+            where custom_type=%s and ifnull(parent_account, '') = ''""",
         custom_type,
         as_dict=1,
     ):
@@ -471,7 +471,7 @@ def get_accounts(company, custom_type):
         """
         select name, account_number, parent_account, lft, rgt, root_type, report_type, account_name, include_in_gross, account_type, is_group, lft, rgt
         from `tabAccount`
-        where company=%s and type=%s order by lft""",
+        where company=%s and custom_type=%s order by lft""",
         (company, custom_type),
         as_dict=True,
     )
