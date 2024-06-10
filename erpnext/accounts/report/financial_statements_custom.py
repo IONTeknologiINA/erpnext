@@ -173,7 +173,7 @@ def get_data(
     gl_entries_by_account = {}
     for root in frappe.db.sql(
         """select lft, rgt from tabAccount
-            where custom_type=%s and ifnull(parent_account, '') = ''""",
+            where type=%s and ifnull(parent_account, '') = ''""",
         custom_type,
         as_dict=1,
     ):
@@ -376,7 +376,7 @@ def add_total_row(out, custom_type, balance_must_be, period_list, company_curren
             # Update the global totals based on the custom_type
             if custom_type == 'Income':
                 total_revenue = total_row["total"]
-            elif custom_type == 'COGS':
+            elif custom_type == 'Cost of Good Sold':
                 total_cogs = total_row["total"]
             elif custom_type == 'Expense':
                 total_expense = total_row["total"]
@@ -389,7 +389,7 @@ def add_total_row(out, custom_type, balance_must_be, period_list, company_curren
         out.append({})
 
         # Calculate Gross Profit only after the Total COGS row
-        if custom_type == 'COGS':
+        if custom_type == 'Cost of Good Sold':
             gross = {
                 "account_name": _("Gross Profit"),
                 "account": _("Gross Profit"),
@@ -430,7 +430,7 @@ def add_total_row(out, custom_type, balance_must_be, period_list, company_curren
         if row and "parent_account" in row:
             if custom_type == 'Income' and total_revenue:
                 percentage = (row['total'] / total_revenue) * 100
-            elif custom_type == 'COGS' and total_cogs:
+            elif custom_type == 'Cost of Good Sold' and total_cogs:
                 percentage = (row['total'] / total_revenue) * 100
             elif custom_type == 'Expense' and total_expense:
                 percentage = (row['total'] / total_revenue) * 100
@@ -471,7 +471,7 @@ def get_accounts(company, custom_type):
         """
         select name, account_number, parent_account, lft, rgt, root_type, report_type, account_name, include_in_gross, account_type, is_group, lft, rgt
         from `tabAccount`
-        where company=%s and custom_type=%s order by lft""",
+        where company=%s and type=%s order by lft""",
         (company, custom_type),
         as_dict=True,
     )

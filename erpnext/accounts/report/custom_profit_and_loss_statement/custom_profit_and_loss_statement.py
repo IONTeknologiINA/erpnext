@@ -233,7 +233,7 @@ def get_chart_data(filters, columns, income, cogs, expense, net_profit_loss):
 	if income_data:
 		datasets.append({"name": _("Income"), "values": income_data})
 	if cogs:
-		datasets.append({"name": _("COGS"), "values": cogs_data})
+		datasets.append({"name": _("Cost of Good Sold"), "values": cogs_data})
 	if expense_data:
 		datasets.append({"name": _("Expense"), "values": expense_data})
 	if net_profit:
