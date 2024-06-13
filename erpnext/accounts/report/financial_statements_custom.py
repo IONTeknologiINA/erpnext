@@ -446,25 +446,7 @@ def add_total_row(out, custom_type, balance_must_be, period_list, company_curren
                 row['percentage'] = f"{round(percentage, 2)}%"
             else:
                 row['percentage'] = "###" 
-
-
-    # Add percentage to specific total rows except Total Revenue
-    # for row in out:
-    #     if row['account_name'] == 'Total COGS' and total_revenue:
-    #         row['percentage'] = f"{round((total_cogs / total_revenue) * 100, 2)}%"
-    #     elif row.get('is_gross_profit') and total_revenue:
-    #         row['percentage'] = f"{round(((total_revenue - total_cogs) / total_revenue) * 100, 2)}%"
-    #     elif row['account_name'] == 'Operating Profit' and total_revenue:
-    #         row['percentage'] = f"{round(((total_revenue - total_cogs - total_expense) / total_revenue) * 100, 2)}%"
-    #     elif 'Total' in row['account_name'] and row['account_name'] != 'Total Revenue':
-    #         if custom_type == 'COGS' and total_revenue:
-    #             row['percentage'] = f"{round((total_cogs / total_revenue) * 100, 2)}%"
-    #         elif custom_type == 'Expense' and total_revenue:
-    #             row['percentage'] = f"{round((total_expense / total_revenue) * 100, 2)}%"
-    #         elif custom_type == 'Other' and total_revenue:
-    #             row['percentage'] = f"{round((total_other / total_revenue) * 100, 2)}%"
-    
-    
+ 
 
 def get_accounts(company, custom_type):
     return frappe.db.sql(
@@ -720,10 +702,15 @@ def get_columns(periodicity, period_list, accumulated_values=1, company=None):
             }
         )
     for period in period_list:
+        if periodicity == "Yearly":
+            label = "Amount"
+        else:
+            label = period.label
+
         columns.append(
             {
                 "fieldname": period.key,
-                "label": "Amount",
+                "label": label,
                 "fieldtype": "Currency",
                 "options": "currency",
                 "width": 150,
@@ -734,7 +721,7 @@ def get_columns(periodicity, period_list, accumulated_values=1, company=None):
             columns.append(
                 {
                     "fieldname": "total",
-                    "label": _("Amount"),
+                    "label": _("Total"),
                     "fieldtype": "Currency",
                     "width": 150,
                     "options": "currency",

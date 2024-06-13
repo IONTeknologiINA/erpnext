@@ -112,10 +112,10 @@ def get_report_summary(
         return [row for row in rows if not row.get("is_gross_profit") and not row.get("is_operating_profit")]
 
     def get_specific_account_value(rows, account_name, key):
-            for row in rows:
-                if row.get("account_name") == account_name:
-                    return flt(row.get(key, 0), 3)
-            return 0
+        for row in rows:
+            if row.get("account_name") == account_name:
+                return flt(row.get(key, 0), 3)
+        return 0
     
     income_filtered = filter_out_custom_rows(income) if income else []
     cogs_filtered = filter_out_custom_rows(cogs) if cogs else []
@@ -123,15 +123,19 @@ def get_report_summary(
     other_revenue_expense_filtered = filter_out_custom_rows(other_revenue_expense) if other_revenue_expense else []
 
     for period in period_list:
-        key = period if consolidated else period.key
+        if consolidated:
+            key = period
+        else:
+            key = period.key
+
         if income_filtered:
-            net_income = get_specific_account_value(income_filtered, "Total Revenue", key)
+            net_income += get_specific_account_value(income_filtered, "Total Revenue", key)
         if cogs_filtered:
-            net_cogs = get_specific_account_value(cogs_filtered, "Total COGS", key)
+            net_cogs += get_specific_account_value(cogs_filtered, "Total COGS", key)
         if expense_filtered:
-            net_expense = get_specific_account_value(expense_filtered, "Total Operational Expense", key)  # Adjust account name as needed
+            net_expense += get_specific_account_value(expense_filtered, "Total Operational Expense", key)
         if other_revenue_expense_filtered:
-            net_other_revenue_expense = get_specific_account_value(other_revenue_expense_filtered, "Total Other Revenue & Expense", key)  # Adjust account name as needed
+            net_other_revenue_expense += get_specific_account_value(other_revenue_expense_filtered, "Total Other Revenue & Expense", key)
         if net_profit_loss:
             net_profit += net_profit_loss.get(key, 0.0)
 
@@ -154,7 +158,7 @@ def get_report_summary(
         {"value": net_cogs, "label": cogs_label, "datatype": "Currency", "currency": currency},
         {"type": "separator", "value": "-"},
         {"value": net_expense, "label": expense_label, "datatype": "Currency", "currency": currency},
-        {"type": "separator", "value": "="},
+        {"type": "separator", "value": "-"},
         {"value": net_other_revenue_expense, "label": other_revenue_expense_label, "datatype": "Currency", "currency": currency},
         {"type": "separator", "value": "=", "color": "blue"},
         {
@@ -207,10 +211,12 @@ def get_net_profit_loss(income, cogs, expense, other_revenue_expense, period_lis
 
         total += flt(net_profit_loss[key])
         net_profit_loss["total"] = total
+
         if total_income > 0:
             percentage = total / total_income * 100
         else:
             percentage = 0
+            
         net_profit_loss['percentage'] = f"{round(percentage, 2)}%"
 
     if has_value:
